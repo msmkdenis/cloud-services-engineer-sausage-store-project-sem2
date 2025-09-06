@@ -9,7 +9,7 @@ frontend:
   service:
     port: 80
   ingress:
-    host: msmk_denis.2sem.students-projects.ru
+    host: msmk-denis.2sem.students-projects.ru
     path: /
     pathType: Prefix
     tlsSecretName: 2sem-students-projects-wildcard-secret
