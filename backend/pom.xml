@@ -10,7 +10,7 @@
     </parent> 
     <groupId>com.yandex.practicum.devops</groupId>
     <artifactId>sausage-store</artifactId>
-    <version>${env.VERSION}</version>
+    <version>1.0.0</version>
 
 
     <distributionManagement>
@@ -62,11 +62,10 @@
             <version>1.8.1</version>
         </dependency>
 
-    
-       <dependency>
+       <!-- <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-vault-config</artifactId>
-       </dependency> 
+       </dependency>  -->
 
        <dependency>
             <groupId>org.springframework.boot</groupId>
