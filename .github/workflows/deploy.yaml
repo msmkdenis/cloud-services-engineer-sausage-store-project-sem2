@@ -11,6 +11,8 @@ env:
   NEXUS_HELM_REPO_PASSWORD: ${{ secrets.NEXUS_HELM_REPO_PASSWORD }}
   KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
   KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+  VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+  VAULT_HOST: ${{ secrets.VAULT_HOST }}
 
 jobs:
   # Сборка и пуш образов в докерхаб:
@@ -106,10 +108,13 @@ jobs:
             chmod 600 kubeconfig
             export VERSION=`helm show chart chartmuseum/sausage-store | yq '.version'`
             helm upgrade --install sausage-store chartmuseum/sausage-store \
+              --history-max 3 \
               --kubeconfig ./kubeconfig \
               --namespace '${{ secrets.KUBE_NAMESPACE }}' \
               --set backend_report.image_tag=${{ github.sha }} \
               --set backend.image_tag=${{ github.sha }} \
               --set frontend.image_tag=${{ github.sha }} \
-              --set backend.env.SPRING_CLOUD_VAULT_ENABLED=false
+              --set global.vault.name=vault \
+              --set global.vault.host=$VAULT_HOST \
+              --set global.vault.vaultToken=$VAULT_TOKEN
             rm -rf kubeconfig
