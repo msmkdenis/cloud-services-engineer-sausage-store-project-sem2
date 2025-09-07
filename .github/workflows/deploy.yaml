@@ -105,5 +105,5 @@ jobs:
             echo "$KUBE_CONFIG" > kubeconfig
             chmod 600 kubeconfig
             export VERSION=`helm show chart chartmuseum/sausage-store | yq '.version'`
-            helm upgrade --install sausage-store chartmuseum/sausage-store --version $VERSION --kubeconfig ./kubeconfig  --namespace '${{ secrets.KUBE_NAMESPACE }}' --set backend_report.image_tag=${{ github.sha }} --set backend.image_tag=${{ github.sha }} --set frontend.image_tag=${{ github.sha }}
+            helm upgrade --install sausage-store chartmuseum/sausage-store --version $VERSION --kubeconfig ./kubeconfig  --namespace '${{ secrets.KUBE_NAMESPACE }}' --set backend_report.image_tag=${{ github.sha }} --set backend.image_tag=${{ github.sha }} --set frontend.image_tag=${{ github.sha }} --set backend.env.SPRING_CLOUD_VAULT_ENABLED=false
             rm -rf kubeconfig
