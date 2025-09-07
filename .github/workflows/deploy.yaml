@@ -11,8 +11,6 @@ env:
   NEXUS_HELM_REPO_PASSWORD: ${{ secrets.NEXUS_HELM_REPO_PASSWORD }}
   KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
   KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-  VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
-  VAULT_HOST: ${{ secrets.VAULT_HOST }}
 
 jobs:
   # Сборка и пуш образов в докерхаб:
@@ -49,7 +47,7 @@ jobs:
             # Для каждого пересобранного образа 
             # устанавливаем тег latest, чтобы потом
             # на сервере и в docker-compose.yml не указывать версию образа:
-            tags: ${{ secrets.DOCKER_USER }}/sausage-backend:${{ github.sha }}
+            tags: ${{ secrets.DOCKER_USER }}/sausage-backend:latest
             build-args: |
               VERSION=${{ github.sha }}
         - name: Push Frontend to DockerHub
@@ -57,13 +55,13 @@ jobs:
           with:
             context: ./frontend/
             push: true
-            tags: ${{ secrets.DOCKER_USER }}/sausage-frontend:${{ github.sha }}
+            tags: ${{ secrets.DOCKER_USER }}/sausage-frontend:latest
         - name: Push Backend-report to DockerHub
           uses: docker/build-push-action@v4
           with:
             context: ./backend-report/
             push: true
-            tags: ${{ secrets.DOCKER_USER }}/sausage-backend-report:${{ github.sha }}
+            tags: ${{ secrets.DOCKER_USER }}/sausage-backend-report:latest
 
   # Упаковываем helm-чарт и пушим его в Nexus
   add_helm_chart_to_nexus:
@@ -111,10 +109,7 @@ jobs:
               --history-max 3 \
               --kubeconfig ./kubeconfig \
               --namespace '${{ secrets.KUBE_NAMESPACE }}' \
-              --set backend_report.image_tag=${{ github.sha }} \
-              --set backend.image_tag=${{ github.sha }} \
-              --set frontend.image_tag=${{ github.sha }} \
-              --set global.vault.name=vault \
-              --set global.vault.host=$VAULT_HOST \
-              --set global.vault.vaultToken=$VAULT_TOKEN
+              --set-string backend.image_tag="latest" \
+              --set-string frontend.image_tag="latest" \
+              --set-string backend-report.image_tag="latest"
             rm -rf kubeconfig
