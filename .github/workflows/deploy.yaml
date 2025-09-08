@@ -107,7 +107,6 @@ jobs:
             helm repo update
             echo "$KUBE_CONFIG" > kubeconfig
             chmod 600 kubeconfig
-            export VERSION=`helm show chart chartmuseum/sausage-store | yq '.version'`
             helm upgrade --install sausage-store chartmuseum/sausage-store \
               --history-max 3 \
               --kubeconfig ./kubeconfig \
