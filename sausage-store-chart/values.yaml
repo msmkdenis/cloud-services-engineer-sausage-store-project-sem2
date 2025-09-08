@@ -1,13 +1,5 @@
 global:
   imagePullPolicy: Always
-  vault:
-    enabled: true
-    host: 89.169.188.245
-    port: 8201
-    scheme: http
-    name: vault 
-    token: hvs.eKJ3mcpOkjqVHtfOAKRjOwhT
-
 
 frontend:
   replicas: 1
